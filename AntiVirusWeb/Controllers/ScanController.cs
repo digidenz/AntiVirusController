@@ -6,15 +6,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using log4net;
 
 namespace AntiVirusWeb.Controllers
 {
 	public class ScanController : Controller
 	{
-		// GET: Scan
-		public ActionResult Index()
+        protected ILog Log;
+        
+        public ScanController()
+        {
+            Log = log4net.LogManager.GetLogger(this.GetType());
+        }
+
+        // GET: Scan
+        [Authorize]
+        public ActionResult Index()
 		{
-			return View();
+            Log.Info("Index page is being accessed");
+            return View();
 		}
 
 		/// <summary>
@@ -27,6 +37,7 @@ namespace AntiVirusWeb.Controllers
 		/// 		The <see cref="Task"/>.
 		/// </returns>
 		[System.Web.Mvc.HttpPost]
+        [Authorize]
 		public ActionResult UploadFile(HttpPostedFileBase postedFile)
 		{
 			// file validation.
@@ -53,7 +64,9 @@ namespace AntiVirusWeb.Controllers
 
 			postedFile.SaveAs(filePath);
 
-			return Json("Successfully upload");
+            Log.Info($"File {postedFile.FileName} successfully uploaded");
+
+            return Json("Successfully upload");
 		}
 	}
 }
