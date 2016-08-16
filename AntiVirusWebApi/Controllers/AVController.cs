@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
+using AntiVirusWebApi.Models;
+using AntiVirusWebApi.Scanners;
 using nClam;
 
 namespace AntiVirusWebApi.Controllers
@@ -15,22 +18,25 @@ namespace AntiVirusWebApi.Controllers
 		[HttpGet, Route("byfilepath")]
 		public IHttpActionResult ScanFile(string filePath)
 		{
-			// TODO: Use IOC to set server config
-			ClamClient clam = new ClamClient("localhost", 3310);
-			ClamScanResult scanResult = clam.ScanFileOnServer(filePath);
-
-			// TODO: Return proper structured object
-			switch (scanResult.Result)
+			ScanResult scanResult = new ScanResult
 			{
-				case ClamScanResults.Clean:
-					return Ok("File is clean!");
-				case ClamScanResults.VirusDetected:
-					return Ok($"Warning! File is infected by: '{scanResult.InfectedFiles.First().VirusName}'");
-				case ClamScanResults.Error:
-					return BadRequest($"An error occured when scanning the file: '{scanResult.RawResult}'");
-				default:
-					return BadRequest($"Expected scan result: '{scanResult.Result}'");
-			}
+				ScannedFile = filePath
+			};
+
+			// TODO: Use IOC to resolve scanners
+			IList<IScanner> scanners = new List<IScanner>
+			{
+				new ClamAvScanner()
+			};
+
+			scanResult.Detections.AddRange(
+				scanners
+					.Select(
+						scanner => scanner.ScanByFilePath(filePath)
+					)
+				);
+
+			return Ok(scanResult);
 		}
 	}
 }
