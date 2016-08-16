@@ -8,11 +8,11 @@
 
 <form id="frmUpload" method="POST" enctype="multipart/form-data">
 	@Html.AntiForgeryToken()
-	@Html.ValidationSummary(true, "", new {@class = "text-danger"})
+	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 	<div class="form-group">
 		<div class="col-sm-4">
 			<div class="input-group">
-				<input type="text" id="File" readonly="readonly"/>
+				<input type="text" id="File" readonly="readonly" />
 				<label class="input-group-btn">
 					<span class="btn btn-primary">
 						Browse &nbsp; <input type="file" id="postedFile" name="postedFile" accept="*" style="display: none;">
@@ -29,18 +29,27 @@
 		</div>
 	</div>
 </form>
-<br/>
-<br/>
-<div class="alert alert-info">
+<br />
+<br />
+<div class="alert alert-success" id="divSuccess" style="display: none">
+	<strong>Success!</strong>
+	No threats found.
+	<br/><br />
 	<div id="alertInfo">
-		Result here....
+	</div>
+</div>
+<div class="alert alert-danger" id="divError" style="display: none">
+	<strong>Danger!</strong>
+	Threats found.
+	<br /><br />
+	<div id="alertErrorInfo">
 	</div>
 </div>
 <script type="text/javascript">
-	$(function () {
+	$(function() {
 	});
 
-	$("#frmUpload").on("submit", function (e) {
+	$("#frmUpload").on("submit", function(e) {
 
 		console.log("triggered submit");
 
@@ -56,19 +65,71 @@
 			processData: false,
 			contentType: false,
 			dataType: "json",
-			success: function (data) {
+			success: function(data) {
 				console.log("File uploaded successfully");
 				console.log(data);
-				console.log($('#alertInfo'));
-				$('#alertInfo').html(data.ScannedFile);
-				$('#alertInfo').html(data.toString());
-				console.log(data);
+
+				var avVendors = "";
+				var avVendorValue;
+				var index;
+
+				if (!data.ErrorDetected && !data.MalwareDetected) {
+					$('#divSuccess').show();
+
+					for (index = 0; index < data.Detections.length; index++) {
+						if (index !== 0)
+							avVendors += ", ";
+
+						if (data.Detections[index].AvVendor === 1)
+							avVendors += "ClamAv";
+						else if (data.Detections[index].AvVendor === 2)
+							avVendors += "Windows Defender";
+					}
+
+					avVendorValue = "<strong>Av defenders used to scan: </strong>" + avVendors + "";
+
+					$("#alertInfo").html(avVendorValue);
+				} else {
+					$('#divError').show();
+
+					avVendors = "";
+					var type = "";
+					var row = "";
+
+					for (index = 0; index < data.Detections.length; index++) {
+						if (index !== 0)
+							avVendors += ", ";
+
+						if (data.Detections[index].Type === 1)
+							type = "None";
+						else if (data.Detections[index].Type === 2)
+							type = "Virus";
+						else if (data.Detections[index].Type === 3)
+							type = "Trojen";
+						else if (data.Detections[index].Type === 4)
+							type = "Other";
+						else if (data.Detections[index].Type === 5)
+							type = "Error";
+
+						if (data.Detections[index].AvVendor === 1)
+							avVendors = "ClamAv";
+						else if (data.Detections[index].AvVendor === 2)
+							avVendors = "Windows Defender";
+
+						row += "<tr><td>" + avVendors + "</td> <td>" + data.Detections[index].Name + "</td>  <td>" + type + "</td> </tr>";
+
+					}
+					var detections = "<table style='width:100%'><tr><th>VendorAV</th><th>Name</th> <th>Type</th></tr>" + row + "</table>";
+					
+					$("#alertErrorInfo").html(detections);
+
+				}
 			},
 			error: function (xhr, status, err) {
-			    console.log("File uploaded failed");
-			    $("#alert").removeClass();
-			    $("#alert").addClass("alert alert-danger");
-			    $("#alert").text(data);
+				console.log("File uploaded failed");
+				$("#alert").removeClass();
+				$("#alert").addClass("alert alert-danger");
+				$("#alert").text(data);
 				//if(xhr.status == 400)
 				//{
 				//showalert($('#alertPlaceholder'), jqXHR.responseJSON.message, "alert-danger");
@@ -84,6 +145,8 @@
 
 	$('#postedFile').change(function () {
 		$('#File').val($('#postedFile').val());
+		$('#divSuccess').hide();
+		$('#divError').hide();
 	});
 
 </script>
