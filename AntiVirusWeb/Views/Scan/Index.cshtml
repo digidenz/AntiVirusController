@@ -31,7 +31,7 @@
 </form>
 <br/>
 <br/>
-<div class="alert alert-info">
+<div id ="alert" class="alert alert-info">
 	<div>
 		Result here....
 	</div>
@@ -57,9 +57,23 @@
 			contentType: false,
 			dataType: "json",
 			success: function (data) {
-				console.log("File uploaded successfully");
+			    if (data.succeed === true) {
+			        console.log("File uploaded successfully");
+			        $("#alert").removeClass();
+			        $("#alert").addClass("alert alert-success");
+			        $("#alert").text(data.message);
+			    } else {
+			        console.log("File uploaded failed");
+			        $("#alert").removeClass();
+			        $("#alert").addClass("alert alert-danger");
+			        $("#alert").text(data.message);
+			    }
 			},
 			error: function (xhr, status, err) {
+			    console.log("File uploaded failed");
+			    $("#alert").removeClass();
+			    $("#alert").addClass("alert alert-danger");
+			    $("#alert").text(data);
 				//if(xhr.status == 400)
 				//{
 				//showalert($('#alertPlaceholder'), jqXHR.responseJSON.message, "alert-danger");
