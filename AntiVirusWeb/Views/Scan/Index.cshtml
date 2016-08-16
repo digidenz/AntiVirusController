@@ -1,0 +1,134 @@
+﻿@{
+	ViewBag.Title = "File Scanner";
+}
+<h2>@ViewBag.Title</h2>
+<h3>@ViewBag.Message</h3>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+
+<form id="frmUpload" method="POST" enctype="multipart/form-data">
+	@Html.AntiForgeryToken()
+	@Html.ValidationSummary(true, "", new {@class = "text-danger"})
+	<div class="form-group">
+	@*<div class="alert alert-info">
+		<div class="col-sm-5">
+			<div class="input-group">
+				<input type="text" id="File" readonly="readonly" />
+				<label class="input-group-btn">
+					<span class="btn btn-primary">
+						Browse &nbsp; <input type="file" id="postedFile" name="postedFile" accept="*" style="display: none;">
+					</span>
+				</label>
+			</div>
+		</div>
+	</div>*@
+		@*<div class="form-group">
+		<label class="col-sm-2 form-control-label">Input</label>
+		<div class="col-sm-10">
+			<div class="input-group">
+				<input type="text" id="File" readonly="readonly" />
+				<label class="input-group-btn">
+					<span class="btn btn-primary">
+						Browse &nbsp; <input type="file" id="postedFile" name="postedFile" accept="*" style="display: none;">
+					</span>
+				</label>
+			</div>
+			<span class="text-danger" id="fileValidationErrors" />
+		</div>
+	</div>*@
+		<div class="col-sm-4">
+			<div class="input-group">
+				<input type="text" id="File" readonly="readonly"/>
+				<label class="input-group-btn">
+					<span class="btn btn-primary">
+						Browse &nbsp; <input type="file" id="postedFile" name="postedFile" accept="*" style="display: none;">
+					</span>
+				</label>
+				&nbsp;
+				<button id="btnUploadSubmitRequest" type="submit" class="btn btn-primary ladda-button" data-style="zoom-in">
+					<span class="ladda-label">
+						<span class="glyphicon glyphicon-ok"></span> Scan
+					</span>
+				</button>
+			</div>
+			<span class="text-danger" id="fileValidationErrors" />
+		</div>
+	</div>
+</form>
+<br/>
+<br/>
+<div class="alert alert-info">
+	<div>
+		Result here....
+	</div>
+</div>
+<script type="text/javascript">
+	$(function () {
+	});
+
+	$("#frmUpload").on("submit", function (e) {
+
+		console.log("triggered submit");
+
+		e.preventDefault();
+
+		var l = Ladda.create(document.querySelector('#btnUploadSubmitRequest'));
+		l.start();
+
+		$.ajax({
+			url: "/Scan/UploadFile",
+			type: "POST",
+			data: new FormData(this),
+			processData: false,
+			contentType: false,
+			dataType: "json",
+			success: function (data) {
+				console.log("File uploaded successfully");
+			},
+			error: function (xhr, status, err) {
+				//if(xhr.status == 400)
+				//{
+				//showalert($('#alertPlaceholder'), jqXHR.responseJSON.message, "alert-danger");
+				//}
+
+				console.log(xhr);
+			},
+			complete: function () {
+				l.stop();
+			}
+		});
+	});
+
+	$('#postedFile').change(function () {
+		$('#File').val($('#postedFile').val());
+		//var selectedFile = this.files[0];
+		//var selectedFileName = $('#postedFile').val().split("\\");
+		//var fileMaxSize = $('#fileMaxSize').val();
+
+		//if (selectedFile.size <= fileMaxSize) {
+		//	$("#fileValidationErrors").text();
+		//	$("#fileValidationErrors").hide();
+		//}
+		//else {
+		//	$("#fileValidationErrors").text("File size exceed, Max file size allowed is: " + fileMaxSize / (1024 * 1024) + " MB"); // To display in MB.
+		//	$("#fileValidationErrors").show();
+		//	return;
+		//}
+
+		//var supportedFileTypes = $('#supportedFileTypes').val();
+		//var supportedFileTypesArray = supportedFileTypes.split(',');
+		//var fileName = (selectedFileName[selectedFileName.length - 1]).split('.');
+		//var fileExtension = fileName[fileName.length - 1];
+
+		//if ($.inArray('.' + fileExtension, supportedFileTypesArray) !== -1) {
+		//	$("#fileValidationErrors").text();
+		//	$("#fileValidationErrors").hide();
+		//}
+		//else {
+		//	$("#fileValidationErrors").text("Invalid file type, supported file types are: " + supportedFileTypes);
+		//	$("#fileValidationErrors").show();
+		//	return;
+		//}
+	});
+
+</script>
