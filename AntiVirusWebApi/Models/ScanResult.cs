@@ -1,20 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace AntiVirusWebApi.Models
 {
+	[DataContract]
 	public class ScanResult
 	{
 		readonly List<Detection> _detections = new List<Detection>();
 
+		[DataMember]
 		public string ScannedFile
 		{
 			get;
 			set;
 		}
 
+		[DataMember]
 		public List<Detection> Detections => _detections;
 
+		[DataMember]
 		bool MalwareDetected
 		{
 			get
@@ -27,6 +32,7 @@ namespace AntiVirusWebApi.Models
 			}
 		}
 
+		[DataMember]
 		bool ErrorDetected
 		{
 			get
