@@ -11,6 +11,7 @@ namespace AntiVirusWebApi.Models
 		None = 1,
 		Virus = 2,
 		Trojan = 3,
-		Error = 100
+		Other = 100,
+		Error = 101
 	}
 }
