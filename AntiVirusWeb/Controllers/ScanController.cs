@@ -20,6 +20,7 @@ namespace AntiVirusWeb.Controllers
         }
 
         // GET: Scan
+        [Authorize]
         public ActionResult Index()
 		{
             Log.Info("Index page is being accessed");
@@ -36,6 +37,7 @@ namespace AntiVirusWeb.Controllers
 		/// 		The <see cref="Task"/>.
 		/// </returns>
 		[System.Web.Mvc.HttpPost]
+        [Authorize]
 		public ActionResult UploadFile(HttpPostedFileBase postedFile)
 		{
 			// file validation.
@@ -62,7 +64,9 @@ namespace AntiVirusWeb.Controllers
 
 			postedFile.SaveAs(filePath);
 
-			return Json("Successfully upload");
+            Log.Info($"File {postedFile.FileName} successfully uploaded");
+
+            return Json("Successfully upload");
 		}
 	}
 }
