@@ -41,9 +41,11 @@
 <div class="alert alert-danger" id="divError" style="display: none">
 	<strong>Danger!</strong>
 	Threats found.
-	<br /><br />
+	<br/><br/>
 	<div id="alertErrorInfo">
 	</div>
+</div>
+<div class="alert alert-danger" id="divErrorMsg" style="display: none">
 </div>
 <script type="text/javascript">
 	$(function() {
@@ -129,7 +131,8 @@
 			    console.log("File uploaded failed");
 			    $("#alert").removeClass();
 			    $("#alert").addClass("alert alert-danger");
-                $('#alertInfo').text(xhr.statusText);
+			    $('#divErrorMsg').text(xhr.statusText);
+			    $('#divErrorMsg').show();
 				//if(xhr.status == 400)
 				//{
 				//showalert($('#alertPlaceholder'), jqXHR.responseJSON.message, "alert-danger");
@@ -147,6 +150,7 @@
 		$('#File').val($('#postedFile').val());
 		$('#divSuccess').hide();
 		$('#divError').hide();
+		$('#divErrorMsg').hide();
 	});
 
 </script>
