@@ -38,8 +38,8 @@ namespace AntiVirusWebApi
 				DateFormatHandling = DateFormatHandling.IsoDateFormat,
 				DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
 				ObjectCreationHandling = ObjectCreationHandling.Auto,
-				DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
-				NullValueHandling = NullValueHandling.Ignore,
+				DefaultValueHandling = DefaultValueHandling.Include,
+				NullValueHandling = NullValueHandling.Include,
 				TypeNameHandling = TypeNameHandling.Auto,
 			};
 		}

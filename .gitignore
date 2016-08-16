@@ -7,3 +7,7 @@
 /.vs
 /AntiVirusWebApi/AntiVirusWebApi.csproj.user
 /packages
+/AntiVirusWeb/bin
+/AntiVirusWeb/obj/Debug
+/AntiVirusWebUI/obj/Debug
+/AntiVirusWebUI/bin

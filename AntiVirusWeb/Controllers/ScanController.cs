@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using log4net;
 using AntiVirusWebApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -28,11 +29,19 @@ namespace AntiVirusWeb.Controllers
 							new StringEnumConverter()
 						}
 			};
+		protected ILog Log;
+        
+        public ScanController()
+        {
+            Log = log4net.LogManager.GetLogger(this.GetType());
+        }
 
-		// GET: Scan
-		public ActionResult Index()
+        // GET: Scan
+        [Authorize]
+        public ActionResult Index()
 		{
-			return View();
+            Log.Info("Index page is being accessed");
+            return View();
 		}
 
 		/// <summary>
@@ -45,6 +54,7 @@ namespace AntiVirusWeb.Controllers
 		/// 		The <see cref="Task"/>.
 		/// </returns>
 		[System.Web.Mvc.HttpPost]
+		[Authorize]
 		public async Task<ActionResult> UploadFile(HttpPostedFileBase postedFile)
 		{
 			// file validation.

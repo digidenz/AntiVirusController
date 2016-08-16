@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Http;
 using AntiVirusWebApi.Models;
 using AntiVirusWebApi.Scanners;
-using nClam;
 
 namespace AntiVirusWebApi.Controllers
 {
@@ -26,7 +25,8 @@ namespace AntiVirusWebApi.Controllers
 			// TODO: Use IOC to resolve scanners
 			IList<IScanner> scanners = new List<IScanner>
 			{
-				new ClamAvScanner()
+				new ClamAvScanner(),
+				new WinDefenderScanner()
 			};
 
 			scanResult.Detections.AddRange(
