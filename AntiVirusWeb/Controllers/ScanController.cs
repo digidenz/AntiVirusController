@@ -59,8 +59,8 @@ namespace AntiVirusWeb.Controllers
 		{
 			if (postedFile?.ContentLength == null)
 			{
-				Log.Error("An Scan attemp was made with empty files.");
-                return new HttpStatusCodeResult(400, "Please select a file pior scaning."); 
+				Log.Error("A scan attempts was made with an empty files.");
+                return new HttpStatusCodeResult(400, "Please select a file."); 
             }
 
 			// file validation.
