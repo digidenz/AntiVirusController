@@ -60,12 +60,8 @@ namespace AntiVirusWeb.Controllers
 			if (postedFile?.ContentLength == null)
 			{
 				Log.Error("An Scan attemp was made with empty files.");
-				return Json(new
-				{
-					succeed = false,
-					message = "Please select a file pior scaning."
-				});
-			}
+                return new HttpStatusCodeResult(400, "Please select a file pior scaning."); 
+            }
 
 			// file validation.
 			if (postedFile.ContentLength > int.Parse(ConfigurationManager.AppSettings["FileMaxUploadSizeBytes"]))
@@ -108,8 +104,9 @@ namespace AntiVirusWeb.Controllers
 				HttpResponseMessage response = await client.GetAsync("api/avscan/byfilepath?filePath=" + filePath);
 				if (response.IsSuccessStatusCode)
 				{
-					//ScanResult scanResult = JsonSerializer response.Content.ReadAsStringAsync();
-					var responseContent = await response.Content.ReadAsStringAsync();
+                    Log.Info("Scan succeed.");
+                    //ScanResult scanResult = JsonSerializer response.Content.ReadAsStringAsync();
+                    var responseContent = await response.Content.ReadAsStringAsync();
 					return JsonConvert.DeserializeObject<ScanResult>(responseContent, DefaultJsonSerializerSettings);
 				}
 			}

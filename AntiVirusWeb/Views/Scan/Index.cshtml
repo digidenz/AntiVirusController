@@ -31,7 +31,7 @@
 </form>
 <br/>
 <br/>
-<div class="alert alert-info">
+<div id="alert" class="alert alert-info">
 	<div id="alertInfo">
 		Result here....
 	</div>
@@ -60,6 +60,9 @@
 				console.log("File uploaded successfully");
 				console.log(data);
 				console.log($('#alertInfo'));
+
+				$("#alert").removeClass();
+				$("#alert").addClass("alert alert-success");
 				$('#alertInfo').html(data.ScannedFile);
 				$('#alertInfo').html(data.toString());
 				console.log(data);
@@ -68,7 +71,7 @@
 			    console.log("File uploaded failed");
 			    $("#alert").removeClass();
 			    $("#alert").addClass("alert alert-danger");
-			    $("#alert").text(data);
+                $('#alertInfo').text(xhr.statusText);
 				//if(xhr.status == 400)
 				//{
 				//showalert($('#alertPlaceholder'), jqXHR.responseJSON.message, "alert-danger");

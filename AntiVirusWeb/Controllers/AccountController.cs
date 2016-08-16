@@ -48,7 +48,7 @@ namespace AntiVirusWeb.Controllers
                 return View("Login");
             }
 
-           // if (login.Username == "TestUser" && login.Password == "Welcome1")
+            //if (login.Username == "TestUser" && login.Password == "Welcome1")
                 FormsAuthentication.RedirectFromLoginPage(login.Username, true);
 
             ViewBag.Error = "Credentials invalid. Please try again.";
