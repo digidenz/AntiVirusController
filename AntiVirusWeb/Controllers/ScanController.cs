@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
-namespace FileScanner.Controllers
+namespace AntiVirusWeb.Controllers
 {
 	public class ScanController : Controller
 	{
