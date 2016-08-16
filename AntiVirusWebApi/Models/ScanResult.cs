@@ -29,7 +29,8 @@ namespace AntiVirusWebApi.Models
 				return Detections.Any(
 					detection =>
 						detection.Type == DetectionType.Virus ||
-						detection.Type == DetectionType.Trojan
+						detection.Type == DetectionType.Trojan ||
+						detection.Type == DetectionType.Other
 				);
 			}
 		}
