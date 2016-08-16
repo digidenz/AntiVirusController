@@ -102,9 +102,9 @@ namespace AntiVirusWeb.Controllers
 					var responseContent = await response.Content.ReadAsStringAsync();
 					return JsonConvert.DeserializeObject<ScanResult>(responseContent, DefaultJsonSerializerSettings);
 				}
-
-				return response;
 			}
+
+			return null;
 		}
 	}
 }
