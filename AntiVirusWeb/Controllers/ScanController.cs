@@ -30,18 +30,18 @@ namespace AntiVirusWeb.Controllers
 						}
 			};
 		protected ILog Log;
-        
-        public ScanController()
-        {
-            Log = log4net.LogManager.GetLogger(this.GetType());
-        }
 
-        // GET: Scan
-        [Authorize]
-        public ActionResult Index()
+		public ScanController()
 		{
-            Log.Info("Index page is being accessed");
-            return View();
+			Log = log4net.LogManager.GetLogger(this.GetType());
+		}
+
+		// GET: Scan
+		[Authorize]
+		public ActionResult Index()
+		{
+			Log.Info("Index page is being accessed");
+			return View();
 		}
 
 		/// <summary>
@@ -57,18 +57,18 @@ namespace AntiVirusWeb.Controllers
 		[Authorize]
 		public async Task<ActionResult> UploadFile(HttpPostedFileBase postedFile)
 		{
-            if (postedFile == null || postedFile.ContentLength == null)
-            {
-                Log.Error("An Scan attemp was made with empty files.");
-                return Json(new 
-                {
-                    succeed = false,
-                    message = "Please select a file pior scaning."
-                });
-            }
-            
-            // file validation.
-            if (postedFile.ContentLength > int.Parse(ConfigurationManager.AppSettings["FileMaxUploadSizeBytes"]))
+			if (postedFile?.ContentLength == null)
+			{
+				Log.Error("An Scan attemp was made with empty files.");
+				return Json(new
+				{
+					succeed = false,
+					message = "Please select a file pior scaning."
+				});
+			}
+
+			// file validation.
+			if (postedFile.ContentLength > int.Parse(ConfigurationManager.AppSettings["FileMaxUploadSizeBytes"]))
 			{
 				throw new ArgumentException("File exceeds the max file size limit");
 			}
