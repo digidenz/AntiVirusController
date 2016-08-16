@@ -32,7 +32,7 @@
 <br/>
 <br/>
 <div class="alert alert-info">
-	<div>
+	<div id="alertInfo">
 		Result here....
 	</div>
 </div>
@@ -58,6 +58,11 @@
 			dataType: "json",
 			success: function (data) {
 				console.log("File uploaded successfully");
+				console.log(data);
+				console.log($('#alertInfo'));
+				$('#alertInfo').html(data.ScannedFile);
+				$('#alertInfo').html(data.toString());
+				console.log(data);
 			},
 			error: function (xhr, status, err) {
 				//if(xhr.status == 400)

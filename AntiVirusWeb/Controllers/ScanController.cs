@@ -3,14 +3,32 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using AntiVirusWebApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace AntiVirusWeb.Controllers
 {
 	public class ScanController : Controller
 	{
+		/// <summary>
+		/// The default json serializer settings.
+		/// </summary>
+		private static readonly JsonSerializerSettings DefaultJsonSerializerSettings =
+			new JsonSerializerSettings
+			{
+				Converters =
+					new List<JsonConverter>
+						{
+							new StringEnumConverter()
+						}
+			};
+
 		// GET: Scan
 		public ActionResult Index()
 		{
@@ -27,7 +45,7 @@ namespace AntiVirusWeb.Controllers
 		/// 		The <see cref="Task"/>.
 		/// </returns>
 		[System.Web.Mvc.HttpPost]
-		public ActionResult UploadFile(HttpPostedFileBase postedFile)
+		public async Task<ActionResult> UploadFile(HttpPostedFileBase postedFile)
 		{
 			// file validation.
 			if (postedFile.ContentLength > int.Parse(ConfigurationManager.AppSettings["FileMaxUploadSizeBytes"]))
@@ -53,7 +71,30 @@ namespace AntiVirusWeb.Controllers
 
 			postedFile.SaveAs(filePath);
 
-			return Json("Successfully upload");
+			var scanResult = await ScanFile(filePath);
+
+			return Json(scanResult);
+		}
+
+		private async Task<ScanResult> ScanFile(string filePath)
+		{
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri("http://localhost:51810/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+				// New code:
+				HttpResponseMessage response = await client.GetAsync("api/avscan/byfilepath?filePath=" + filePath);
+				if (response.IsSuccessStatusCode)
+				{
+					//ScanResult scanResult = JsonSerializer response.Content.ReadAsStringAsync();
+					var responseContent = await response.Content.ReadAsStringAsync();
+					return JsonConvert.DeserializeObject<ScanResult>(responseContent, DefaultJsonSerializerSettings);
+				}
+
+				return response;
+			}
 		}
 	}
 }
