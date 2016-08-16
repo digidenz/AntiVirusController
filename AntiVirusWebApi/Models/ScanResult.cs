@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
 namespace AntiVirusWebApi.Models
 {
+	[Serializable]
 	[DataContract]
 	public class ScanResult
 	{
@@ -20,7 +22,7 @@ namespace AntiVirusWebApi.Models
 		public List<Detection> Detections => _detections;
 
 		[DataMember]
-		bool MalwareDetected
+		public bool MalwareDetected
 		{
 			get
 			{
@@ -34,7 +36,7 @@ namespace AntiVirusWebApi.Models
 		}
 
 		[DataMember]
-		bool ErrorDetected
+		public bool ErrorDetected
 		{
 			get
 			{
