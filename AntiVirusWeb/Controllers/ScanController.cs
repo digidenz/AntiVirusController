@@ -57,8 +57,18 @@ namespace AntiVirusWeb.Controllers
 		[Authorize]
 		public async Task<ActionResult> UploadFile(HttpPostedFileBase postedFile)
 		{
-			// file validation.
-			if (postedFile.ContentLength > int.Parse(ConfigurationManager.AppSettings["FileMaxUploadSizeBytes"]))
+            if (postedFile == null || postedFile.ContentLength == null)
+            {
+                Log.Error("An Scan attemp was made with empty files.");
+                return Json(new 
+                {
+                    succeed = false,
+                    message = "Please select a file pior scaning."
+                });
+            }
+            
+            // file validation.
+            if (postedFile.ContentLength > int.Parse(ConfigurationManager.AppSettings["FileMaxUploadSizeBytes"]))
 			{
 				throw new ArgumentException("File exceeds the max file size limit");
 			}
