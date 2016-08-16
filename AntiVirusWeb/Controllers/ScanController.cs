@@ -6,15 +6,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using log4net;
 
 namespace AntiVirusWeb.Controllers
 {
 	public class ScanController : Controller
 	{
-		// GET: Scan
-		public ActionResult Index()
+        protected ILog Log;
+        
+        public ScanController()
+        {
+            Log = log4net.LogManager.GetLogger(this.GetType());
+        }
+
+        // GET: Scan
+        public ActionResult Index()
 		{
-			return View();
+            Log.Info("Index page is being accessed");
+            return View();
 		}
 
 		/// <summary>
